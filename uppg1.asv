@@ -48,17 +48,13 @@ T=zeros(4,6);
 for i=1:4
     file =sprintf("eiffel%d.mat",i);
     load(file);
-    [~,D] = eig(A);
-    d = sort(diag(D)); %sorted eigenvalues
-    T(i,3) = d(2)/d(1);
     [T(i,1), T(i,2)] = potens(A,1e-10);
     [T(i,4), T(i,5)] = inverspotens(A,1e-10);
-    T(i,6) = d(end)/d(end-1);
 end
 
-tab=array2table(T,'VariableNames',{'Största egenvärdet' '# iter' 'lambda_2/lambda_1' 'Minsta egenvärdet', '#iter', 'lambda_n/lambda_{n-1}'},'RowNames',{'eiffel1' 'eiffel2' 'eiffel3' 'eiffel4'});
+tab=array2table(T,'VariableNames',{'StÃ¶rsta egenvÃ¤rdet' '# iter' 'lambda_2/lambda_1' 'Minsta egenvÃ¤rdet', '#iter', 'lambda_n/lambda_{n-1}'},'RowNames',{'eiffel1' 'eiffel2' 'eiffel3' 'eiffel4'});
 disp(tab);
-%% 1d -- Beräkning av andra egenvärden
+%% 1d -- BerÃ¤kning av andra egenvÃ¤rden
 
 function [mu, iter] = inverspotens_skift(A, skift, tau)
     % reuses inverse power method again
