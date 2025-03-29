@@ -2,20 +2,28 @@
 
 h = 0.25; % Får ej ändras i koden nedan
 
+% h = 0.0005; % to create reference values which are seen as correct
+
 [t,x,y,vx,vy] = kastbana(h);
 figure(1);
 ps = [x,y];
 scatter(x,y);
+hold on;
+plot(x,y);
+hold off;
+xmaxtrue = 27.336010;
+ymaxtrue = 18.126374;
+xnedtrue = 48.770320;
 
 %% Linjär interpolation
-
-
 
 x1 = ps(1,1);
 y1 = ps(1,2);
 xmax = x1;
 ymax = y1;
 xned = NaN;
+
+
 for i=ps(2:end,:)'
     x2 = i(1);
     y2= i(2);
@@ -30,36 +38,68 @@ for i=ps(2:end,:)'
     y1=y2;
 end
 
+figure(2);
+scatter(x,y);
+hold on;
+plot(x,y);
+scatter(xmax,ymax,"black", "filled");
+hold off;
 fprintf("[xmax, ymax] = [%f, %f]\nxned = %f\n", xmax, ymax, xned);
+fprintf("[xmax-xmaxtrue, ymax-ymaxtrue] = [%f, %f]\nxned-xnedtrue = %f\n", xmax-xmaxtrue, ymax-ymaxtrue, xned-xnedtrue);
+
 
 
 %% Kvadratisk interpolation
-
 x1 = ps(1,1);
 y1 = ps(1,2);
 xmax = x1;
 ymax = y1;
 xned = NaN;
+
+figure(3);
+scatter(x,y);
+hold on; 
+
 for i=2:2:length(x)
     x2 = ps(i,1);
     y2 = ps(i,2);
     x3 = ps(i+1,1);
     y3 = ps(i+1,2);
 
-    xv = [x1,x2,x3];
-    yv = [y1,y2,y3];
+    xv = [x1;x2;x3];
+    yv = [y1;y2;y3];
 
-    A = [[1;1;1],xv', xv'.^2];
+    A = [[1;1;1],xv, xv.^2];
 
-    z = A'*A \ A'*yv';
-    a=z(1);
+    z = A'*A \ A'*yv;
+    a=z(3);
     b=z(2);
-    c=z(3);
-
+    c=z(1);
+    poly = @(x) a * (x .^ 2) + b * x + c;
+    xs=linspace(x1,x3);
+    plot(xs,poly(xs), 'Color',[0.8500 0.3250 0.0980]);
     
+    % andragradarens extrempunkt: xe = -b/(2a)
+    
+    xe = -b/(2*a);
+    if(x1 <= xe && xe <= x3)
+        % konvav över hela därmed om extrempunkt i intervall är vi klara
+        ymax = a*xe^2 + b*xe + c;
+        xmax = xe;
+    end
+
+    if (y1 >= 0 && y3 <= 0) % find root, it's always on the right side obv
+        xned = -b/(2*a) + sqrt(b^2/(4*a^2)-c/a);
+    end
+    x1 = x3;
+    y1 = y3;
 
 end
 
+scatter(xmax,ymax,"black", "filled");
+hold off;
+fprintf("[xmax, ymax] = [%f, %f]\nxned = %f\n", xmax, ymax, xned);
+fprintf("[xmax-xmaxtrue, ymax-ymaxtrue] = [%f, %f]\nxned-xnedtrue = %f\n", xmax-xmaxtrue, ymax-ymaxtrue, xned-xnedtrue);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
