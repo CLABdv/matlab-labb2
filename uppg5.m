@@ -14,7 +14,7 @@ fprintf("Calculated value is %f, diff from true value is %f, elapsed time is %f\
 %% 5b Monte-Carlo
 
 % Er kod här...
-n = 4*10^7;
+n = 4*10^3;
 muOmega = 1.2^10;
 xs = rand(10,n)*1.2;
 f = @(x) exp(prod(x));

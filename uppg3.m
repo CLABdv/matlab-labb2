@@ -97,11 +97,10 @@ end
 S=[mkdum;L];
 tau = 1e-13;
 iter = 0;
-while (true)
+dxnorm = inf;
+while (dxnorm > tau)
     dx = -jac(S) \ F(S); %lös med minsta kvadrat i varje steg
-    if all (abs(dx) - tau < 0)
-        break
-    end
+    dxnorm = norm(dx);
     S = S + dx;
     iter = iter+1;
    disp([iter dxnorm])
