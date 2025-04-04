@@ -29,7 +29,38 @@ loglog(Ns, f(1.14, Ns), "Color",[0.9290 0.6940 0.1250]);
 
 hold off
 
-Xs = linspace(0,6,NN);
+%%
+% Kod för approximation av noggrannhetsordningen
+n = 15;
+x = 0.11;
+a = linspace(1, n, n);
+a = 2 .^ a; % dubbla finheten i integrationen för varje steg
+res = zeros(2, n-2);
+for i = 1:n-2
+    res(1, i) = a(i);
+    res(2,i) = (trapets(x, a(i)) - trapets(x, a(i+1))) / (trapets(x, a(i+1)) - trapets(x, a(i + 2)));
+end
+T = array2table(res);
+disp(T)
+%%
+% Kod för att se noggrannheten variera i x med fixat N
+points_eval = linspace(0, 6, 100); % punkterna där erf evalueras
+errs = zeros(3, 100);
+Ns = [50, 120, 400];
+for i = 1:100
+    for j = 1:3
+        errs(j,i) = abs(trapets(points_eval(i), Ns(j)) - erf(points_eval(i)));
+    end
+end
+
+figure(2)
+semilogy(points_eval, errs(1,:))
+hold on
+semilogy(points_eval, errs(2,:))
+semilogy(points_eval, errs(3,:))
+
+
+%%
 
 
 
