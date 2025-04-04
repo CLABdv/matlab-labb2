@@ -15,16 +15,16 @@ erf2=erf(0.32);
 erf3=erf(1.14);
 
 figure(1)
-loglog(Ns, abs(Is(:,1) - erf1), "--", "Color",[0.3010 0.7450 0.9330]);
+loglog(Ns, abs(Is(:,1) - erf1), "Color",[0.3010 0.7450 0.9330]);
 hold on;
-loglog(Ns, abs(Is(:,2) - erf2), "--", "Color",[0.8500 0.3250 0.0980]);
-loglog(Ns, abs(Is(:,3) - erf3), "--", "Color",[0.9290 0.6940 0.1250]);
+loglog(Ns, abs(Is(:,2) - erf2), "Color",[0.8500 0.3250 0.0980]);
+loglog(Ns, abs(Is(:,3) - erf3), "Color",[0.9290 0.6940 0.1250]);
 
 C= 1/(3*sqrt(pi));
 f=@(x, N) C * x^3 ./ (N .^ 2);
-loglog(Ns, f(0.11, Ns), "Color",[0.3010 0.7450 0.9330]);
-loglog(Ns, f(0.32, Ns), "Color",[0.8500 0.3250 0.0980]);
-loglog(Ns, f(1.14, Ns), "Color",[0.9290 0.6940 0.1250]);
+loglog(Ns, f(0.11, Ns), "--", "Color",[0.3010 0.7450 0.9330]);
+loglog(Ns, f(0.32, Ns), "--", "Color",[0.8500 0.3250 0.0980]);
+loglog(Ns, f(1.14, Ns), "--", "Color",[0.9290 0.6940 0.1250]);
 
 
 hold off
@@ -58,10 +58,21 @@ semilogy(points_eval, errs(1,:))
 hold on
 semilogy(points_eval, errs(2,:))
 semilogy(points_eval, errs(3,:))
+hold off
 
 
 %%
 
+figure(3)
+X = linspace(0,6,100);
+g = @(x) 2/sqrt(pi)*exp(-(x.^2));
+gprim = @(x) 4*exp(-(x.^2)) .* x / sqrt(pi);
+gbis =  @(x) exp(-(x.^2)) .* (8*x -4)/sqrt(pi);
+
+plot(X,gprim(X));
+hold on;
+plot(X,g(X));
+plot(X,gbis(X))
 
 
 

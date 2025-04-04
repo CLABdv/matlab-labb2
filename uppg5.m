@@ -14,26 +14,29 @@ fprintf("Calculated value is %f, diff from true value is %f, elapsed time is %f\
 %% 5b Monte-Carlo
 
 % Er kod här...
-n = 4*10^3;
-muOmega = 1.2^10;
-xs = rand(10,n)*1.2;
-f = @(x) exp(prod(x));
-ys = f(xs);
-tic;
-Is = muOmega * cumsum(ys) ./ (1:n);
-timeElapsed2 = toc;
-errs = abs(Is - Iexact);
+for i = 1:5
+    n = 4*10^6;
+    muOmega = 1.2^10;
+    xs = rand(10,n)*1.2;
+    f = @(x) exp(prod(x));
+    ys = f(xs);
+    tic;
+    Is = muOmega * cumsum(ys) ./ (1:n);
+    timeElapsed2 = toc;
+    errs = abs(Is - Iexact);
 
-fprintf("at n = %d samples: I = %f, err = %f, timeelapsed = %f\n", n, Is(end), errs(end), timeElapsed2);
+    fprintf("at n = %d samples: I = %f, err = %f, timeelapsed = %f\n", n, Is(end), errs(end), timeElapsed2);
 
-figure(1);
-plot(Is);
-figure(2);
-loglog(errs);
-hold on;
-loglog((1:n) .^ (-1/2)*errs(1));
-% ca 5*10^5 iterationer verkar räcka för att konsekvent ha ett fel lägre än
-% med trapetsregeln
+    figure(2*i);
+    plot(Is);
+    figure(2*i+1);
+    loglog(errs);
+    hold on;
+    loglog((1:n) .^ (-1/2)*errs(1));
+    hold off
+    % ca 5*10^5 iterationer verkar räcka för att konsekvent ha ett fel lägre än
+    % med trapetsregeln
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
